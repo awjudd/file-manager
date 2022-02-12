@@ -1,10 +1,20 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Hello</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
-  <router-view />
+  <default>
+    <router-view />
+  </default>
 </template>
+
+<script lang="ts">
+import { Options, Vue } from 'vue-class-component';
+import Default from '@/components/layouts/Default.vue';
+
+@Options({
+  components: {
+    Default,
+  },
+})
+export default class App extends Vue {}
+</script>
 
 <style>
 #app {

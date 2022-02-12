@@ -1,12 +1,18 @@
-import { app, protocol, BrowserWindow } from 'electron';
+import {
+  app, protocol, BrowserWindow, ipcMain,
+} from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer';
+import path from 'path';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
-  { scheme: 'file-manager', privileges: { secure: true, standard: true } },
+  {
+    scheme: 'file-manager',
+    privileges: { secure: true, standard: true },
+  },
 ]);
 
 async function createWindow() {
@@ -16,16 +22,16 @@ async function createWindow() {
     height: 600,
     fullscreen: true,
     webPreferences: {
-
       // Required for Spectron testing
       enableRemoteModule: !!process.env.IS_TEST,
 
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration
       // for more info
-      nodeIntegration: (process.env
-        .ELECTRON_NODE_INTEGRATION as unknown) as boolean,
+      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION as unknown as boolean,
       contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
+
+      preload: path.join(__dirname, 'preload.js'),
     },
   });
 
@@ -68,6 +74,10 @@ app.on('ready', async () => {
     }
   }
   createWindow();
+});
+
+ipcMain.on('retrieve:files', async (event, arg) => {
+  console.log(arg);
 });
 
 // Exit cleanly on request from parent process in development mode.
