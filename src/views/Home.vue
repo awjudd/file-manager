@@ -4,18 +4,17 @@
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-import { getModule } from 'vuex-module-decorators';
-import FileAccess from '@/store/file/access';
+import Inject from '@/decorators/inject.decorator';
+import FileApi from '@/services/file/api.class';
 
 @Options({
   components: {},
 })
 export default class Home extends Vue {
-  private fileAccess!: FileAccess;
+  @Inject()
+  private fileAccess!: FileApi;
 
   async created(): Promise<void> {
-    this.fileAccess = getModule(FileAccess, this.$store);
-
     console.log(
       await this.fileAccess.list({
         source: 's3',
