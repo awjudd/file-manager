@@ -1,12 +1,8 @@
 import { createStore } from 'vuex';
+import FileAccess from '@/store/file/access';
 
 export default createStore({
-  state: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
   modules: {
+    fileAccess: FileAccess,
   },
 });
