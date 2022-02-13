@@ -4,6 +4,8 @@ import {
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer';
 import path from 'path';
+import S3FileAccess from './services/file/s3-file-access.class';
+import FileAccessRequest from './models/file/file-access-request.model';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -76,8 +78,12 @@ app.on('ready', async () => {
   createWindow();
 });
 
-ipcMain.on('retrieve:files', async (event, arg) => {
-  console.log(arg);
+ipcMain.on('retrieve:files', async (event, arg: FileAccessRequest) => {
+  const s3FileAccess = new S3FileAccess();
+
+  if (arg.source === 's3') {
+    event.returnValue = await s3FileAccess.list();
+  }
 });
 
 // Exit cleanly on request from parent process in development mode.

@@ -1,5 +1,6 @@
 import { Action, Module, VuexModule } from 'vuex-module-decorators';
 import FileAccessRequest from '@/models/file/file-access-request.model';
+import File from '@/models/file/file.model';
 
 const { electronAPI } = window;
 
@@ -10,7 +11,8 @@ const { electronAPI } = window;
 })
 export default class FileAccess extends VuexModule {
   @Action
-  list(request: FileAccessRequest): Promise<File[]> {
-    return electronAPI.retrieveFiles(request) || [];
+  async list(request: FileAccessRequest): Promise<File[]> {
+    const files = await electronAPI.retrieveFiles(request);
+    return files.map((file: File) => new File(file));
   }
 }

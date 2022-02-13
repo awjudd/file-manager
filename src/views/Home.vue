@@ -13,15 +13,15 @@ import FileAccess from '@/store/file/access';
 export default class Home extends Vue {
   private fileAccess!: FileAccess;
 
-  created(): void {
+  async created(): Promise<void> {
     this.fileAccess = getModule(FileAccess, this.$store);
 
-    setTimeout(() => {
-      this.fileAccess.list({
+    console.log(
+      await this.fileAccess.list({
         source: 's3',
         path: '123',
-      });
-    }, 1000);
+      }),
+    );
   }
 }
 </script>

@@ -15,12 +15,16 @@ module.exports = {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'class-methods-use-this': 'off',
+    'comma-dangle': 'warn',
     semi: 'off',
     '@typescript-eslint/no-extra-semi': 'off',
     'max-len': ['warn', {
       code: 120,
       ignorePattern: 'd="([\\s\\S]*?)"',
     }],
+    'no-param-reassign': [
+      'error', { props: true, ignorePropertyModificationsForRegex: ['^event'] },
+    ],
   },
   overrides: [
     {
