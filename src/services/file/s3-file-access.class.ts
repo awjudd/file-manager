@@ -1,23 +1,36 @@
-import { S3Client } from '@aws-sdk/client-s3';
+import { S3 } from 'aws-sdk';
 import File from '@/models/file/file.model';
 import FileAccess from './file-access.interface';
 
-const client = new S3Client({
+const client = new S3({
   region: 'us-east-1',
-  credentials: {
-    accessKeyId: process.env.VUE_APP_AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.VUE_APP_AWS_SECRET_ACCESS_KEY!,
-  },
+  accessKeyId: process.env.VUE_APP_AWS_ACCESS_KEY_ID!,
+  secretAccessKey: process.env.VUE_APP_AWS_SECRET_ACCESS_KEY!,
 });
 
 export default class S3FileAccess implements FileAccess {
-  async list(): Promise<File[]> {
-    console.log([process.env.VUE_APP_AWS_SECRET_ACCESS_KEY]);
+  list(): Promise<File[]> {
+    return new Promise<File[]>((resolve, reject) => {
+      client.listObjects(
+        {
+          Bucket: process.env.VUE_APP_AWS_S3_BUCKET!,
+        },
+        (err, data) => {
+          if (err) {
+            return reject(err);
+          }
 
-    return [
-      new File({
-        path: 'hi',
-      }),
-    ];
+          return resolve(
+            data.Contents!.map(
+              (d) => new File({
+                name: d.Key,
+                createdAt: d.LastModified,
+                modifiedAt: d.LastModified,
+              }),
+            ),
+          );
+        },
+      );
+    });
   }
 }

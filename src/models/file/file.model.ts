@@ -1,5 +1,5 @@
 export default class File {
-  public path!: string;
+  public name!: string;
 
   public createdAt!: Date;
 
